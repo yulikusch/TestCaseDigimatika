@@ -1,0 +1,39 @@
+import { Injectable, NotFoundException } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { ProductCategory } from './ProductCategory.entity';
+import { Repository } from 'typeorm';
+@Injectable()
+export class ProductCategoryService {
+
+constructor(
+    @InjectRepository(ProductCategory)
+    private readonly repo: Repository<ProductCategory>,
+  ) {}
+
+    findAll(): Promise<ProductCategory[]> {
+      return this.repo.find();
+    }
+
+     async findOne(id: number): Promise<ProductCategory> {
+        const product = await this.repo.findOneBy({ id });
+        if (!product) throw new NotFoundException(`Product ${id} not found`);
+        return product;
+      }
+    
+      create(data: Partial<ProductCategory>): Promise<ProductCategory> {
+        const product = this.repo.create(data);
+        return this.repo.save(product);
+      }
+    
+      async update(id: number, data: Partial<ProductCategory>): Promise<ProductCategory> {
+        const product = await this.findOne(id);
+        Object.assign(product, data);
+        return this.repo.save(product);
+      }
+    
+      async remove(id: number): Promise<void> {
+        const product = await this.findOne(id);
+        await this.repo.remove(product);
+      }
+
+}

@@ -1,0 +1,57 @@
+.container {
+  padding: 24px;
+  font-family: Arial, sans-serif;
+}
+
+.title {
+  font-size: 24px;
+  font-weight: bold;
+  margin-bottom: 20px;
+}
+
+.subtitle {
+  font-size: 20px;
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+
+.table-container {
+  overflow-x: auto;
+}
+
+.data-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.data-table th,
+.data-table td {
+  border: 1px solid #ccc;
+  padding: 10px;
+  text-align: center;
+}
+
+.data-table th {
+  background-color: #f0f0f0;
+}
+.card-row {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 20px;
+  gap: 16px;
+}
+
+.card {
+  flex: 1;
+  padding: 20px;
+  background-color: #f4f4f4;
+  text-align: center;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  font-weight: bold;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+.card-row a {
+  text-decoration: none;
+  color: inherit;
+}
