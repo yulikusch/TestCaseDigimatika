@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Delete, postData, getData, UpdateData } from "../../Service/Sales";
 import SalesForm from "./SalesForm";
+import Swal from "sweetalert2";
 
 function Index() {
   const [DataSales, SetDataSales] = useState([]);
@@ -28,24 +29,51 @@ function Index() {
   };
 
   const handleDelete = (id) => {
-    if (window.confirm("Yakin ingin menghapus data ini?")) {
-      Delete(id).then(() => fetchData());
-    }
+    Swal.fire({
+      title: "Yakin ingin menghapus?",
+      text: "Data yang sudah dihapus tidak bisa dikembalikan.",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#d33",
+      cancelButtonColor: "#3085d6",
+      confirmButtonText: "Ya, hapus!",
+      cancelButtonText: "Batal",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        Delete(id)
+          .then(() => {
+            fetchData();
+            Swal.fire("Terhapus!", "Data berhasil dihapus.", "success");
+          })
+          .catch(() => {
+            Swal.fire("Gagal", "Terjadi kesalahan saat menghapus.", "error");
+          });
+      }
+    });
   };
 
-  const handleFormSubmit = (Sales) => {
-    if (Sales.id) {
-      UpdateData(Sales.id, Sales).then(() => {
-        setFormVisible(false);
-        fetchData();
-      });
+  const handleFormSubmit = (data) => {
+    if (data.id) {
+      UpdateData(data.id, data)
+        .then(() => {
+          setFormVisible(false);
+          fetchData();
+          Swal.fire("Berhasil", "Data Sales berhasil diperbarui.", "success");
+        })
+        .catch((err) => {
+          Swal.fire("Gagal", err.message || "Gagal menambahkan Sales", "error");
+        });
     } else {
-      // ⛔️ Jangan kirim "id: null"
-      const { id, ...dataWithoutId } = Sales;
-      postData(dataWithoutId).then(() => {
-        setFormVisible(false);
-        fetchData();
-      });
+      const { id, ...dataWithoutId } = data;
+      postData(dataWithoutId)
+        .then(() => {
+          setFormVisible(false);
+          fetchData();
+          Swal.fire("Berhasil", "Sales baru berhasil ditambahkan.", "success");
+        })
+        .catch((err) => {
+          Swal.fire("Gagal", err.message || "Gagal menambahkan Sales", "error");
+        });
     }
   };
 

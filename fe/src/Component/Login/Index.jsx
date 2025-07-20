@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import Swal from "sweetalert2"; // ✅ Import SweetAlert2
 import { login } from "../Service/Auth"; // Pastikan path ini benar
-
 const styles = {
   container: {
     display: "flex",
@@ -9,6 +8,18 @@ const styles = {
     justifyContent: "center",
     alignItems: "center",
     backgroundColor: "#f0f2f5",
+    gap: "50px", // Jarak antara info dan form
+    padding: "0 20px",
+  },
+  info: {
+    fontSize: "16px",
+    lineHeight: "1.6",
+    maxWidth: "300px",
+  },
+  title: {
+    fontWeight: "bold",
+    fontSize: "20px",
+    marginBottom: "10px",
   },
   form: {
     backgroundColor: "#fff",
@@ -47,7 +58,7 @@ const styles = {
   },
 };
 
-// Keyframes animasi spinner
+// Global style untuk animasi spinner
 const globalStyle = `
 @keyframes spin {
   to {
@@ -95,7 +106,15 @@ function Login() {
     <>
       <style>{globalStyle}</style>
       <div style={styles.container}>
-        <form style={styles.form} onSubmit={handleLogin}>
+        <div style={styles.info}>
+          <div style={styles.title}>Untuk Login</div>
+          <p>
+            Email: <strong>admin@gmail.com</strong> <br />
+            Password: <strong>@S123456</strong>
+          </p>
+        </div>
+
+        <form onSubmit={handleLogin} style={styles.form}>
           <input
             type="email"
             name="email"

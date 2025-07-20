@@ -1,7 +1,7 @@
 import React from "react";
-import "../Style/Dashboard.css"; // file CSS biasa
+import "../Style/Dashboard.css";
 import CardSection from "../Dashboard/cardsection";
-import TransaksiForm from "./TransaksiForm";
+// import TransaksiForm from "./TransaksiForm";
 import { useNavigate } from "react-router-dom";
 const Index = () => {
   const userName = localStorage.getItem("name") || "User";

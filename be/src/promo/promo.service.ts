@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable, NotFoundException,BadRequestException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Promo } from './promo.entity';
 import { Repository } from 'typeorm';
@@ -20,16 +20,36 @@ constructor(
         return product;
       }
     
-      create(data: Partial<Promo>): Promise<Promo> {
-        const product = this.repo.create(data);
-        return this.repo.save(product);
-      }
+      async create(data: Partial<Promo>): Promise<Promo> {
+    
+    const existingCode = await this.repo.findOne({
+      where: { code: data.code },
+    });
+
+    if (existingCode) {
+      throw new BadRequestException('Kode promo sudah digunakan.');
+    }
+
+    const promo = this.repo.create(data);
+    return this.repo.save(promo);
+  }
     
       async update(id: number, data: Partial<Promo>): Promise<Promo> {
-        const product = await this.findOne(id);
-        Object.assign(product, data);
-        return this.repo.save(product);
+    const promo = await this.findOne(id);
+
+    if (data.code && data.code !== promo.code) {
+      const duplicate = await this.repo.findOne({
+        where: { code: data.code },
+      });
+
+      if (duplicate && duplicate.id !== id) {
+        throw new BadRequestException('Kode promo sudah digunakan.');
       }
+    }
+
+    Object.assign(promo, data);
+    return this.repo.save(promo);
+  }
     
       async remove(id: number): Promise<void> {
         const product = await this.findOne(id);

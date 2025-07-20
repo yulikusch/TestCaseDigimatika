@@ -22,8 +22,7 @@ function SalesForm({ initialData = null, onSubmit, onCancel }) {
     if (initialData) {
       setForm({
         ...initialData,
-        start_date: initialData.start_date?.slice(0, 10) || "",
-        end_date: initialData.end_date?.slice(0, 10) || "",
+        password: "",
       });
     }
   }, [initialData]);
@@ -32,7 +31,7 @@ function SalesForm({ initialData = null, onSubmit, onCancel }) {
     e.preventDefault();
     onSubmit(form);
   };
-
+  const [showPassword, setShowPassword] = useState(false);
   return (
     <form onSubmit={handleSubmit}>
       <h3>{form.id ? "Edit Sales" : "Tambah Sales"}</h3>
@@ -53,12 +52,17 @@ function SalesForm({ initialData = null, onSubmit, onCancel }) {
       />
       <input
         name="password"
-        type="password"
+        type={showPassword ? "text" : "password"}
         value={form.password}
         onChange={handleChange}
-        placeholder="masukan password"
-        required
+        placeholder={
+          form.id ? "Biarkan kosong jika tidak diubah" : "Masukkan password"
+        }
+        required={!form.id}
       />
+      <button type="button" onClick={() => setShowPassword((prev) => !prev)}>
+        {showPassword ? "🙈" : "👁️"}
+      </button>
       <select name="level" value={form.level} onChange={handleChange} required>
         <option value="">-- Pilih Level --</option>
         <option value="Admin">Admin</option>

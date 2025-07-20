@@ -6,7 +6,9 @@ const RouterComponent = lazy(() => import("./Root"));
 function App() {
   return (
     <div className="App">
-      <RouterComponent />
+      <Suspense fallback={<div>Loading...</div>}>
+        <RouterComponent />
+      </Suspense>
     </div>
   );
 }

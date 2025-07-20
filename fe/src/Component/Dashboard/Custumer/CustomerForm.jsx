@@ -25,7 +25,7 @@ function PromoForm({ initialData = null, onSubmit, onCancel }) {
 
   return (
     <form onSubmit={handleSubmit}>
-      <h3>{form.id ? "Edit Promo" : "Tambah Promo"}</h3>
+      <h3>{form.id ? "Edit Cutomer" : "Tambah Cutomer"}</h3>
       <input
         name="name"
         value={form.name}

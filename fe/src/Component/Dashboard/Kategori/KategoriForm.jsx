@@ -24,7 +24,7 @@ function KategoriForm({ initialData = null, onSubmit, onCancel }) {
 
   return (
     <form onSubmit={handleSubmit}>
-      <h3>{form.id ? "Edit Produk" : "Tambah Produk"}</h3>
+      <h3>{form.id ? "Edit Kategori" : "Tambah Kategori"}</h3>
       <input
         name="name"
         value={form.name}

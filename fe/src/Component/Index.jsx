@@ -6,9 +6,7 @@ const Index = () => {
     <div>
       <header className="App-header">
         <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
+        <p>Tes Case Digimatika Yuli Achmad.</p>
         <a className="App-link" href="/login" rel="noopener noreferrer">
           Login
         </a>

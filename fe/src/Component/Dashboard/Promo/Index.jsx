@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Delete, postData, getData, UpdateData } from "../../Service/Promo";
 import PromoForm from "./PromoForm";
+import Swal from "sweetalert2";
 
 function Index() {
   const [DataProduct, SetDataProduct] = useState([]);
@@ -28,22 +29,51 @@ function Index() {
   };
 
   const handleDelete = (id) => {
-    if (window.confirm("Yakin ingin menghapus data ini?")) {
-      Delete(id).then(() => fetchData());
-    }
+    Swal.fire({
+      title: "Yakin ingin menghapus?",
+      text: "Data yang sudah dihapus tidak bisa dikembalikan.",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#d33",
+      cancelButtonColor: "#3085d6",
+      confirmButtonText: "Ya, hapus!",
+      cancelButtonText: "Batal",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        Delete(id)
+          .then(() => {
+            fetchData();
+            Swal.fire("Terhapus!", "Data berhasil dihapus.", "success");
+          })
+          .catch(() => {
+            Swal.fire("Gagal", "Terjadi kesalahan saat menghapus.", "error");
+          });
+      }
+    });
   };
 
-  const handleFormSubmit = (product) => {
-    if (product.id) {
-      UpdateData(product.id, product).then(() => {
-        setFormVisible(false);
-        fetchData();
-      });
+  const handleFormSubmit = (data) => {
+    if (data.id) {
+      UpdateData(data.id, data)
+        .then(() => {
+          setFormVisible(false);
+          fetchData();
+          Swal.fire("Berhasil", "Data Promo berhasil diperbarui.", "success");
+        })
+        .catch((err) => {
+          Swal.fire("Gagal", err.message || "Gagal menambahkan Promo", "error");
+        });
     } else {
-      postData(product).then(() => {
-        setFormVisible(false);
-        fetchData();
-      });
+      const { id, ...dataWithoutId } = data;
+      postData(dataWithoutId)
+        .then(() => {
+          setFormVisible(false);
+          fetchData();
+          Swal.fire("Berhasil", "Promo baru berhasil ditambahkan.", "success");
+        })
+        .catch((err) => {
+          Swal.fire("Gagal", err.message || "Gagal menambahkan Promo", "error");
+        });
     }
   };
 
@@ -82,7 +112,7 @@ function Index() {
                 <td>{item.id}</td>
                 <td>{item.code}</td>
                 <td>{item.description}</td>
-                <td>{item.discount}</td>
+                <td>{item.discount} %</td>
                 <td>
                   {new Date(item.start_date).toLocaleDateString("id-ID", {
                     day: "2-digit",

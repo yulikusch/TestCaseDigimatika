@@ -8,7 +8,9 @@ const getToken = () => {
 export async function getData() {
   try {
     const response = await fetch(API_URL, {
-      headers: {},
+      headers: {
+        Authorization: `Bearer ${getToken()}`,
+      },
     });
     if (response.ok) {
       const data = await response.json();
@@ -27,6 +29,7 @@ export async function postData(formData) {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
+        Authorization: `Bearer ${getToken()}`,
       },
       body: JSON.stringify(formData),
     });
@@ -64,24 +67,24 @@ export async function UpdateData(id, updateData) {
     const response = await fetch(`${API_URL}/${id}`, {
       method: "PUT",
       headers: {
-        "Content-Type": "application/json", // Pastikan ini ada
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${getToken()}`,
       },
-      body: JSON.stringify(updateData), // Ubah menjadi JSON string
+      body: JSON.stringify(updateData),
     });
 
     if (response.ok) {
       const result = await response.json();
-      console.log("Response:", result);
       return result;
     } else {
-      const errorText = await response.text();
-      console.error(
-        "Failed to update data. Status:",
-        response.status,
-        response.statusText,
-        errorText
-      );
-      throw new Error(`Update failed: ${response.statusText}`);
+      const contentType = response.headers.get("content-type");
+      if (contentType && contentType.includes("application/json")) {
+        const errorData = await response.json();
+        throw new Error(errorData.message || "Gagal memperbarui data.");
+      } else {
+        const errorText = await response.text();
+        throw new Error(errorText || "Gagal memperbarui data.");
+      }
     }
   } catch (error) {
     console.error("Error during UpdateData:", error);
@@ -93,7 +96,9 @@ export async function Delete(selectedId) {
   try {
     const response = await fetch(`${API_URL}/${selectedId}`, {
       method: "DELETE",
-      headers: {},
+      headers: {
+        Authorization: `Bearer ${getToken()}`,
+      },
     });
 
     if (response.ok) {
