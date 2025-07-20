@@ -27,6 +27,9 @@ product_id: number;
   @Column({ type: 'int', nullable: true, insert: false, update: false })
 subtotal: number;
 
+
+
+
  @ManyToOne(() => Product, product => product.id)
   @JoinColumn({ name: 'product_id' }) // menghubungkan ke kolom product_id
   product: Product;

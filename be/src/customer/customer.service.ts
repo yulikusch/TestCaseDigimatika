@@ -45,27 +45,34 @@ export class CustomerService {
   async update(id: number, updateData: Partial<Customer>): Promise<Customer> {
   const existingCustomer = await this.findOne(id);
 
-  if (updateData.email) {
+  if (
+    updateData.email &&
+    updateData.email !== existingCustomer.email
+  ) {
     const emailExist = await this.repo.findOne({
       where: { email: updateData.email },
     });
-    if (emailExist && emailExist.id !== id) {
-      throw new BadRequestException('Email sudah digunakan.');
+    if (emailExist) {
+      throw new BadRequestException("Email sudah digunakan.");
     }
   }
 
-  if (updateData.phone) {
+  if (
+    updateData.phone &&
+    updateData.phone !== existingCustomer.phone
+  ) {
     const phoneExist = await this.repo.findOne({
       where: { phone: updateData.phone },
     });
-    if (phoneExist && phoneExist.id !== id) {
-      throw new BadRequestException('Nomor telepon sudah digunakan.');
+    if (phoneExist) {
+      throw new BadRequestException("Nomor telepon sudah digunakan.");
     }
   }
 
   Object.assign(existingCustomer, updateData);
   return this.repo.save(existingCustomer);
 }
+
 
 
   async remove(id: number): Promise<void> {

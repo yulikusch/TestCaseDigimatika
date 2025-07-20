@@ -19,6 +19,9 @@ const caardsection = () => {
       <a href="/sales" className="card">
         Sales
       </a>
+      <a href="/sales-detail" className="card">
+        Sales Detail
+      </a>
     </div>
   );
 };

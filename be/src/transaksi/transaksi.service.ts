@@ -2,35 +2,31 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { Product } from './product.entity';
+import { Transaksi } from './transaksi.entity';
 
 @Injectable()
-export class ProductService {
+export class TransaksiService {
   constructor(
-    @InjectRepository(Product)
-    private readonly repo: Repository<Product>,
+    @InjectRepository(Transaksi)
+    private readonly repo: Repository<Transaksi>,
   ) {}
 
-  findAll(): Promise<Product[]> {
+  findAll(): Promise<Transaksi[]> {
     return this.repo.find();
   }
 
-  async findById(id: number): Promise<Product | null> {
-    return await this.repo.findOne({ where: { id } });
-  }
-
-  async findOne(id: number): Promise<Product> {
+  async findOne(id: number): Promise<Transaksi> {
     const product = await this.repo.findOneBy({ id });
     if (!product) throw new NotFoundException(`Product ${id} not found`);
     return product;
   }
 
-  create(data: Partial<Product>): Promise<Product> {
+  create(data: Partial<Transaksi>): Promise<Transaksi> {
     const product = this.repo.create(data);
     return this.repo.save(product);
   }
 
-  async update(id: number, data: Partial<Product>): Promise<Product> {
+  async update(id: number, data: Partial<Transaksi>): Promise<Transaksi> {
     const product = await this.findOne(id);
     Object.assign(product, data);
     return this.repo.save(product);

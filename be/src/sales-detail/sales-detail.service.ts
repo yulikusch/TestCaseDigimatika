@@ -24,7 +24,7 @@ export class SalesDetailService {
   create(data: Partial<SalesDetail>): Promise<SalesDetail> {
   console.log('Received data:', data);
   
-   if (!data.product_id) throw new Error('product_id is required');
+  if (!data.product_id) throw new Error('product_id is required');
   if (!data.sales_id) throw new Error('sales_id is required');
   if (!data.qty) throw new Error('qty is required');
   if (!data.price) throw new Error('price is required');

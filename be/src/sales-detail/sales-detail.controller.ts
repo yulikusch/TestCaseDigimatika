@@ -11,9 +11,20 @@ import {
 import { SalesDetailService } from './sales-detail.service';
 import { SalesDetail } from './salesdetail.entity';
 
+import { TransaksiService } from '../transaksi/transaksi.service'; 
+import { Transaksi } from '../transaksi/transaksi.entity';
+
+import { ProductService } from '../product/product.service'; 
+import { Product } from '../product/product.entity';
+
 @Controller('salesdetail')
 export class SalesDetailController {
-  constructor(private readonly service: SalesDetailService) {}
+  constructor(
+    private readonly service: SalesDetailService,
+    private readonly transaksiService: TransaksiService,
+    private readonly productService: ProductService,
+  
+  ) {}
 
   @Get()
   findAll(): Promise<SalesDetail[]> {
@@ -25,13 +36,49 @@ export class SalesDetailController {
     return this.service.findOne(id);
   }
 
-  @Post()
+@Post()
 async create(@Body() body: any): Promise<any> {
-  const { sales_id, details } = body;
+  const { customer_id, sales_id, details } = body;
 
+  const totalAmount = (details as Partial<SalesDetail>[]).reduce((sum, item) => {
+    return sum + (item.qty || 0) * (item.price || 0);
+  }, 0);
+
+  // Validasi stok sebelum membuat transaksi
+  for (const detail of details) {
+    const product = await this.productService.findById(detail.product_id); 
+
+    if (!product) {
+      throw new Error(`Produk dengan ID ${detail.product_id} tidak ditemukan.`);
+    }
+
+    if ((product.stock || 0) < (detail.qty || 0)) {
+      throw new Error(
+        `Stok produk "${product.name}" tidak mencukupi. Stok tersedia: ${product.stock}, diminta: ${detail.qty}`
+      );
+    }
+  }
+
+  // Semua validasi lulus -> buat transaksi
+  const transaksiBaru: Partial<Transaksi> = {
+    sales_id: sales_id,
+    customer_id: customer_id,
+    total_amount: totalAmount,
+    date: new Date(),
+  };
+
+  let transaksi;
+try {
+  transaksi = await this.transaksiService.create(transaksiBaru);
+} catch (error) {
+  console.error("❌ Gagal membuat transaksi:", error);
+  throw new Error("Gagal membuat transaksi. Periksa log server.");
+}
   const results: SalesDetail[] = [];
 
+  // Simpan detail & update stok produk
   for (const detail of details as Partial<SalesDetail>[]) {
+    // Simpan sales detail
     const savedDetail = await this.service.create({
       sales_id: sales_id,
       product_id: detail.product_id,
@@ -40,11 +87,30 @@ async create(@Body() body: any): Promise<any> {
       discount: 0,
     });
 
+    // Update stok
+    const product = await this.productService.findById(detail.product_id!);
+
+if (!product) {
+  throw new Error(`Produk dengan ID ${detail.product_id} tidak ditemukan.`);
+}
+
+const updatedStock = (product.stock || 0) - (detail.qty || 0);
+
+await this.productService.update(detail.product_id!, {
+  stock: updatedStock,
+});
+
     results.push(savedDetail);
   }
 
-  return { message: 'Sales details created', data: results };
+  return {
+    message: 'Transaksi dan Sales details berhasil dibuat',
+    transaksi,
+    salesDetails: results,
+  };
 }
+
+
 
 
 

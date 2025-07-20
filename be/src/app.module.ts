@@ -9,6 +9,7 @@ import { PromoModule } from './promo/promo.module';
 import { CustomerModule } from './customer/customer.module';
 import { SalesModule } from './sales/sales.module';
 import { SalesDetailModule } from './sales-detail/sales-detail.module';
+import { TransaksiModule } from './transaksi/transaksi.module';
 
 // import modul-modul lain jika ada
 
@@ -41,7 +42,8 @@ import { SalesDetailModule } from './sales-detail/sales-detail.module';
     PromoModule,
     CustomerModule,
     SalesModule,
-    SalesDetailModule, 
+    SalesDetailModule,
+    TransaksiModule, 
   ],
 })
 export class AppModule {} // <<=== penting: EXPORT di sini

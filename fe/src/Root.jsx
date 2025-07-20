@@ -8,6 +8,7 @@ import Kategori from "./Component/Dashboard/Kategori/Index";
 import Promo from "./Component/Dashboard/Promo/Index";
 import Custemer from "./Component/Dashboard/Custumer/Index";
 import Sales from "./Component/Dashboard/Sales/Index";
+import Salesdetail from "./Component/Dashboard/Sales-Detail/Index";
 import ProtectedRoute from "./ProtectedRoute";
 
 export default function Root() {
@@ -25,6 +26,7 @@ export default function Root() {
         <Route path="/Promo" element={<Promo />} />
         <Route path="/customer" element={<Custemer />} />
         <Route path="/sales" element={<Sales />} />
+        <Route path="/sales-detail" element={<Salesdetail />} />
       </Route>
     </Routes>
   );

@@ -3,6 +3,7 @@ import { getData } from "../Service/Customer";
 import { getData as getProduct } from "../Service/Products";
 import { getData as getSales } from "../Service/Sales";
 import { postData } from "../Service/SalesDetail";
+import Swal from "sweetalert2";
 
 const TransaksiForm = () => {
   const [customer, setCustomer] = useState("");
@@ -85,6 +86,34 @@ const TransaksiForm = () => {
   const total = details.reduce((sum, item) => sum + item.subtotal, 0);
 
   const handleSubmit = async () => {
+    // Validasi input
+    if (!customer) {
+      Swal.fire({
+        icon: "warning",
+        title: "Customer belum dipilih",
+        text: "Silakan pilih customer terlebih dahulu.",
+      });
+      return;
+    }
+
+    if (!sales) {
+      Swal.fire({
+        icon: "warning",
+        title: "Sales belum dipilih",
+        text: "Silakan pilih sales terlebih dahulu.",
+      });
+      return;
+    }
+
+    if (details.length === 0) {
+      Swal.fire({
+        icon: "warning",
+        title: "Produk belum ditambahkan",
+        text: "Silakan tambahkan minimal satu produk ke transaksi.",
+      });
+      return;
+    }
+
     const payload = {
       sales_id: parseInt(sales),
       customer_id: parseInt(customer),
@@ -92,19 +121,30 @@ const TransaksiForm = () => {
         product_id: d.productId,
         qty: d.qty,
         price: d.price,
-        // subtotal: d.subtotal,
       })),
     };
 
     try {
       const result = await postData(payload);
       console.log("Berhasil simpan:", result);
-      alert("Transaksi berhasil disimpan!");
+
+      Swal.fire({
+        icon: "success",
+        title: "Berhasil!",
+        text: "Transaksi berhasil disimpan!",
+      });
+
       setDetails([]);
       setCustomer("");
+      setsales("");
     } catch (error) {
       console.error("Gagal menyimpan:", error);
-      alert("Terjadi kesalahan saat menyimpan transaksi.");
+
+      Swal.fire({
+        icon: "error",
+        title: "Gagal Menyimpan",
+        text: "Terjadi kesalahan saat menyimpan transaksi.",
+      });
     }
   };
 
@@ -117,6 +157,7 @@ const TransaksiForm = () => {
             className="form-control"
             value={customer}
             onChange={(e) => setCustomer(e.target.value)}
+            required
           >
             <option value="">-- Pilih Customer --</option>
             {customerList.map((cust) => (
@@ -133,6 +174,7 @@ const TransaksiForm = () => {
             className="form-control"
             value={sales}
             onChange={(e) => setsales(e.target.value)}
+            required
           >
             <option value="">-- Pilih Sales --</option>
             {salesList.map((s) => (
