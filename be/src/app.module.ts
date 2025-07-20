@@ -17,7 +17,7 @@ import { TransaksiModule } from './transaksi/transaksi.module';
   imports: [
     TypeOrmModule.forRoot({
   type: 'mssql',
-  host: '202.10.42.85',
+  host: '202.10.xx.85',
   port: 1433,
   username: 'sa',
   password: 'Pdc123456',
