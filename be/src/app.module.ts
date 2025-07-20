@@ -4,12 +4,11 @@ import { User } from './users/user.entity';
 import { AuthModule } from './auth/auth.module';
 import { UsersModule } from './users/users.module'; 
 import { ProductModule } from './product/product.module';
-import { Product } from './product/product.entity';
 import { ProductCategoryModule } from './product-category/product-category.module';
-import { ProductCategory } from './product-category/ProductCategory.entity';
 import { PromoModule } from './promo/promo.module';
 import { CustomerModule } from './customer/customer.module';
 import { SalesModule } from './sales/sales.module';
+import { SalesDetailModule } from './sales-detail/sales-detail.module';
 
 // import modul-modul lain jika ada
 
@@ -33,7 +32,6 @@ import { SalesModule } from './sales/sales.module';
   },
 }),
 
-    // modul lain
      TypeOrmModule.forFeature([User]),
 
     AuthModule,
@@ -42,7 +40,8 @@ import { SalesModule } from './sales/sales.module';
     ProductCategoryModule,
     PromoModule,
     CustomerModule,
-    SalesModule, 
+    SalesModule,
+    SalesDetailModule, 
   ],
 })
 export class AppModule {} // <<=== penting: EXPORT di sini

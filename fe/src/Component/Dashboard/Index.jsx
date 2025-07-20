@@ -3,6 +3,7 @@ import "../Style/Dashboard.css";
 import CardSection from "../Dashboard/cardsection";
 // import TransaksiForm from "./TransaksiForm";
 import { useNavigate } from "react-router-dom";
+import TransaksiForm from "./TransaksiForm";
 const Index = () => {
   const userName = localStorage.getItem("name") || "User";
   const navigate = useNavigate();
@@ -28,6 +29,7 @@ const Index = () => {
       <div className="section">
         <h2 className="subtitle">Transaksi Data</h2>
       </div>
+      <TransaksiForm />
     </div>
   );
 };
